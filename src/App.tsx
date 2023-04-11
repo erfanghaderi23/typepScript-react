@@ -1,26 +1,95 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+// import { useState } from "react";
 
-function App() {
+// interface Istate{
+//  peoples: {
+//   id : number,
+//     fullName : string,
+//     age : number,
+//     img_url : string,
+//     bio?: string, 
+//   }[],
+// }
+
+// const App = () => {
+//   const [peoples , setPeoples] = useState<Istate["peoples"]>([
+//     {
+//     id : 10,
+//     fullName : 'erfan ghaderi',
+//     age : 23,
+//     img_url : "https://hamzehazizzadeh.ir/assets/images/hamzehazizzadeh_image.jpg",
+//     bio: "front end developer", 
+//   }
+//  ]);
+//   peoples.map(p => p.age)
+//   return (
+//     <div className="container">
+//       <h4 className="alert alert-info">
+//         مدیریت اشخاص
+//       </h4>
+//     </div>
+//   );
+// }
+
+// export default App;
+
+
+
+
+// functional commponent
+
+import { useState } from "react";
+import List from "./componenets/List";
+import AddPeople from "./componenets/AddPeoples";
+
+
+export interface Ipeople{
+  id : number,
+  fullName : string,
+  age : number,
+  img_url : string,
+  bio?: string, 
+  } 
+
+const App = () => {
+  const [peoples , setPeoples] = useState<Ipeople[]>([{
+     id : 10,
+    fullName : 'erfan',
+    age : 23,
+    img_url : "data:image/jpeg;base64,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",
+    bio: "front end developer", 
+  }]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <h4 className="alert alert-info">
+        مدیریت اشخاص
+      </h4>
+      <List peoples = {peoples} setPeoples={setPeoples} />
+      <AddPeople peoples={peoples} setPeoples={setPeoples}/>
     </div>
   );
 }
 
 export default App;
+
+
+// class commponent
+// import React, { Component } from 'react'
+
+// interface IProps {
+  
+// }
+ 
+// interface IState {
+  
+// }
+ 
+// class App extends Component<IProps, IState> {
+//   // state = { :  }
+//   render() { 
+//     return ( <div>
+//       top learn
+//     </div>);
+//   }
+// }
+ 
+// export default App;
